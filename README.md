@@ -30,6 +30,7 @@ Microservicio RESTful para la gestión de productos en plataformas de e-commerce
 - [Despliegue](#despliegue)
 - [Pruebas](#pruebas)
 - [Calidad de código](#calidad-de-código)
+- [Repositorios relacionados](#repositorios-relacionados)
 - [Contacto](#contacto)
 
 ---
@@ -610,6 +611,13 @@ npm run lint:fix
 - **Module**: CommonJS.
 - **Modo estricto**: activado.
 - **Configuración**: `tsconfig.json` en la raíz.
+
+---
+
+## Repositorios relacionados
+
+- **Versión legacy**: [JhoamSebastianMunoz/tatsoft-products-service](https://github.com/JhoamSebastianMunoz/tatsoft-products-service) — implementación anterior de este microservicio.
+- **Versión actual (v2)**: [JhoamSebastianMunoz/tatsoft-products-service-v2](https://github.com/JhoamSebastianMunoz/tatsoft-products-service-v2) — este repositorio.
 
 ---
 
