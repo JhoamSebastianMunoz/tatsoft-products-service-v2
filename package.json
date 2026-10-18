@@ -1,5 +1,5 @@
 {
-  "name": "microservice-backend-products",
+  "name": "tatsoft-products-service-v2",
   "version": "2.0.0",
   "description": "API optimizada para gestión de productos con arquitectura SOLID",
   "main": "app.ts",

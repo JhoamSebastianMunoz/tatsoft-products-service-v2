@@ -1,656 +1,625 @@
-# Microservice Backend Products
+# TATSoft Products Service v2
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/JhoamSebastianMunoz/microservice_backend_products_v2.git)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/JhoamSebastianMunoz/tatsoft-products-service-v2)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2+-blue.svg)](https://www.typescriptlang.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green.svg)](https://supabase.com/)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg)](https://vercel.com/)
+[![Express](https://img.shields.io/badge/Express-4.18-lightgrey.svg)](https://expressjs.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E.svg)](https://supabase.com/)
+[![Deploy](https://img.shields.io/badge/Deploy-Vercel-black.svg)](https://vercel.com/)
 
-A robust, scalable RESTful API microservice for product management in e-commerce platforms. Built with **Express**, **TypeScript**, and **Supabase (PostgreSQL)**, featuring JWT authentication, role-based authorization, Supabase Storage for images, and interactive API documentation with Scalar.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Environment Variables](#environment-variables)
-- [Installation & Setup](#installation--setup)
-- [Available Scripts](#available-scripts)
-- [API Documentation](#api-documentation)
-- [API Endpoints (v2)](#api-endpoints-v2)
-- [Authentication & Authorization](#authentication--authorization)
-- [Database & Storage](#database--storage)
-- [Caching & Rate Limiting](#caching--rate-limiting)
-- [Error Handling](#error-handling)
-- [Deployment](#deployment)
-- [Testing](#testing)
-- [Code Quality](#code-quality)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+Microservicio RESTful para la gestión de productos en plataformas de e-commerce. Construido con **Express**, **TypeScript** y **Supabase (PostgreSQL)**, con autenticación JWT, autorización basada en roles, almacenamiento de imágenes en Supabase Storage y documentación interactiva con Scalar.
 
 ---
 
-## Overview
+## Tabla de contenidos
 
-**Microservice Backend Products v2** is a production-ready API for managing products, categories, images, stock inventory, and reports. It follows **SOLID principles** with a clean **Repository-Service-Controller** architecture, uses **Supabase** as the backend platform (PostgreSQL database + Storage + Auth), and is deployed on **Vercel Serverless Functions**.
-
-### Key Features
-
-- ✅ **RESTful API v2** with proper HTTP methods and resource-based URLs
-- ✅ **JWT Authentication** with Bearer tokens
-- ✅ **Role-Based Access Control** (ADMINISTRADOR role for write operations)
-- ✅ **Supabase Storage** for product image uploads
-- ✅ **Interactive API Documentation** with Scalar at `/api-docs`
-- ✅ **Smart Caching** (5-min TTL) with automatic invalidation on writes
-- ✅ **Rate Limiting** (100 requests/minute per user)
-- ✅ **Comprehensive Validation** with express-validator
-- ✅ **Standardized Error Responses** with Supabase error code mapping
-- ✅ **Vercel Serverless** deployment ready
-- ✅ **Full Test Coverage** with Jest + Supertest
+- [Descripción general](#descripción-general)
+- [Stack tecnológico](#stack-tecnológico)
+- [Arquitectura](#arquitectura)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Requisitos previos](#requisitos-previos)
+- [Variables de entorno](#variables-de-entorno)
+- [Instalación y configuración](#instalación-y-configuración)
+- [Scripts disponibles](#scripts-disponibles)
+- [Documentación de la API](#documentación-de-la-api)
+- [Endpoints de la API (v2)](#endpoints-de-la-api-v2)
+- [Autenticación y autorización](#autenticación-y-autorización)
+- [Base de datos y almacenamiento](#base-de-datos-y-almacenamiento)
+- [Caché y rate limiting](#caché-y-rate-limiting)
+- [Manejo de errores](#manejo-de-errores)
+- [Despliegue](#despliegue)
+- [Pruebas](#pruebas)
+- [Calidad de código](#calidad-de-código)
+- [Contacto](#contacto)
 
 ---
 
-## Tech Stack
+## Descripción general
 
-| Category | Technologies |
-|----------|--------------|
+**TATSoft Products Service v2** es una API lista para producción que permite gestionar productos, categorías, imágenes, inventario de stock y reportes. Sigue los **principios SOLID** con una arquitectura limpia **Repositorio–Servicio–Controlador**, usa **Supabase** como plataforma backend (Base de datos PostgreSQL + Storage + Auth) y está preparada para desplegarse en **Vercel Serverless Functions**.
+
+### Características principales
+
+- **API RESTful v2** con métodos HTTP correctos y URLs basadas en recursos.
+- **Autenticación JWT** mediante tokens Bearer.
+- **Control de acceso basado en roles** (rol `ADMINISTRADOR` para operaciones de escritura).
+- **Supabase Storage** para la carga de imágenes de productos.
+- **Documentación interactiva** con Scalar en `/api-docs`.
+- **Caché inteligente** (TTL de 5 minutos) con invalidación automática en escrituras.
+- **Rate limiting** (100 peticiones por minuto por usuario).
+- **Validación robusta** con express-validator.
+- **Respuestas de error estandarizadas** con mapeo de códigos de error de Supabase.
+- **Despliegue serverless** en Vercel.
+- **Pruebas** con Jest + Supertest.
+
+---
+
+## Stack tecnológico
+
+| Categoría | Tecnologías |
+|-----------|-------------|
 | **Runtime** | Node.js 20+, TypeScript 5.2 |
 | **Framework** | Express.js 4.18 |
-| **Database** | Supabase (PostgreSQL) via `pg` and `@supabase/supabase-js` |
-| **Storage** | Supabase Storage |
-| **Authentication** | JWT (`jsonwebtoken`), bcryptjs |
-| **Validation** | express-validator 7.0 |
-| **API Docs** | Scalar (`@scalar/express-api-reference`), OpenAPI 3.0 (YAML) |
-| **Security** | Helmet, CORS, Morgan (logging) |
-| **File Upload** | Multer |
-| **Testing** | Jest 29, Supertest, ts-jest |
-| **Code Quality** | ESLint, TypeScript ESLint |
-| **Deployment** | Vercel Serverless Functions |
-| **Utilities** | UUID, dotenv, yamljs, axios |
+| **Base de datos** | Supabase (PostgreSQL) vía `pg` y `@supabase/supabase-js` |
+| **Almacenamiento** | Supabase Storage |
+| **Autenticación** | JWT (`jsonwebtoken`), bcryptjs |
+| **Validación** | express-validator 7.0 |
+| **Documentación API** | Scalar (`@scalar/express-api-reference`), OpenAPI 3.0 (YAML) |
+| **Seguridad** | Helmet, CORS, Morgan (logging) |
+| **Carga de archivos** | Multer |
+| **Pruebas** | Jest 29, Supertest, ts-jest |
+| **Calidad de código** | ESLint, TypeScript ESLint |
+| **Despliegue** | Vercel Serverless Functions |
+| **Utilidades** | UUID, dotenv, yamljs, axios |
 
 ---
 
-## Architecture
+## Arquitectura
 
-The project follows **Clean Architecture** with **SOLID principles**:
+El proyecto sigue una **arquitectura limpia** con **principios SOLID**:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        API Layer                             │
-│  Routes → Controllers → Middleware (Auth/Validation)        │
+│                        Capa API                              │
+│  Routes → Controllers → Middleware (Auth/Validación)         │
 └─────────────────────────────────────────────────────────────┘
                                ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                      Service Layer                           │
+│                    Capa de Servicios                         │
 │  ProductService → ProductImageService → CategoriaService     │
-│  StockService → ReportService → ImageService                │
+│  StockService → ReportsService → ImageService                │
 └─────────────────────────────────────────────────────────────┘
                                ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                   Repository Layer                           │
-│  ProductRepository → CategoriaRepository → StockRepository  │
-│  ProductImageRepository → ReportsRepository                 │
-│                    (Supabase Client)                        │
+│                   Capa de Repositorios                       │
+│  ProductRepository → CategoriaRepository → StockRepository   │
+│  ProductImageRepository → ReportsRepository                  │
+│                    (Cliente Supabase)                        │
 └─────────────────────────────────────────────────────────────┘
                                ↓
 ┌─────────────────────────────────────────────────────────────┐
-│                   Supabase Platform                          │
-│  PostgreSQL Database + Storage + Auth                        │
+│                    Plataforma Supabase                       │
+│  Base de datos PostgreSQL + Storage + Auth                   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Design Patterns
+### Patrones de diseño
 
-- **Repository Pattern**: Data access abstraction
-- **Service Layer**: Business logic encapsulation
-- **DTOs (Data Transfer Objects)**: Type-safe request/response contracts
-- **Middleware Pipeline**: Authentication, validation, error handling
-- **Dependency Inversion**: Services depend on repository interfaces
+- **Repository Pattern**: abstracción del acceso a datos.
+- **Service Layer**: encapsulamiento de la lógica de negocio.
+- **DTOs (Data Transfer Objects)**: contratos de petición/respuesta tipados.
+- **Middleware Pipeline**: autenticación, validación y manejo de errores.
+- **Dependency Inversion**: los servicios dependen de interfaces de repositorio.
 
 ---
 
-## Project Structure
+## Estructura del proyecto
 
 ```
-microservice_backend_products/
+tatsoft-products-service-v2/
 ├── api/
-│   └── index.ts                 # Vercel serverless entry point
+│   └── index.ts                  # Punto de entrada serverless de Vercel
 ├── config/
-│   └── config-supabaseStorage.ts # Supabase client configuration
+│   └── config-supabaseStorage.ts # Configuración del cliente Supabase
 ├── controllers/
-│   ├── productController/       # Product CRUD controllers
-│   ├── categoryController/      # Category CRUD controllers
-│   ├── imageController/         # Image upload/delete controllers
-│   ├── InventoryController/     # Stock management controllers
+│   ├── productController/        # Controladores CRUD de productos
+│   ├── categoryController/       # Controladores CRUD de categorías
+│   ├── imageController/          # Controladores de carga/eliminación de imágenes
+│   ├── InventoryController/      # Controladores de gestión de stock
+│   ├── reportsController/        # Controladores de reportes
 │   └── microservicePresaleController/
 ├── Dto/
-│   ├── productDto/              # Product DTOs (Create, Update, Get, Delete)
-│   └── imageDto/                # Image DTOs
+│   ├── productDto/               # DTOs de producto (Create, Update, Get, Delete)
+│   └── imageDto/                 # DTOs de imagen
 ├── Helpers/
-│   ├── generateToken.ts         # JWT token generation
-│   ├── generateHash.ts          # Password hashing
-│   └── ImageUploadHelper.ts     # Image upload utilities
+│   ├── generateToken.ts          # Generación de tokens JWT
+│   ├── generateHash.ts           # Hashing de contraseñas
+│   └── ImageUploadHelper.ts      # Utilidades de carga de imágenes
 ├── middleware/
-│   ├── verifyToken.ts           # JWT verification
-│   ├── checkRoleAndPermission.ts # Role-based authorization
-│   ├── validationMiddleware.ts  # Validation error handling
-│   ├── productValidators.ts     # Product validation rules
-│   ├── productMiddleware/       # Product-specific validators
-│   ├── imageMiddleware/         # Image-specific validators
-│   ├── categoryMiddleware/      # Category validators
-│   ├── cacheMiddleware.ts       # Response caching
-│   └── errorHandler.ts          # Global error handling
+│   ├── verifyToken.ts            # Verificación de JWT
+│   ├── checkRoleAndPermission.ts # Autorización por roles
+│   ├── validationMiddleware.ts   # Manejo de errores de validación
+│   ├── productValidators.ts      # Reglas de validación de productos
+│   ├── productMiddleware/        # Validadores específicos de productos
+│   ├── imageMiddleware/          # Validadores específicos de imágenes
+│   ├── categoryMiddleware/       # Validadores de categorías
+│   ├── cacheMiddleware.ts        # Caché de respuestas
+│   └── errorHandler.ts           # Manejo global de errores
 ├── repositories/
-│   ├── ProductRepository.ts     # Product data access
-│   ├── CategoriaRepository.ts   # Category data access
-│   ├── ProductImageRepository.ts # Product image data access
-│   ├── StockRepository.ts       # Stock data access
-│   ├── ReportsRepository.ts     # Reports data access
+│   ├── ProductRepository.ts      # Acceso a datos de productos
+│   ├── CategoriaRepository.ts    # Acceso a datos de categorías
+│   ├── ProductImageRepository.ts # Acceso a datos de imágenes
+│   ├── stockRepository.ts        # Acceso a datos de stock
+│   ├── ReportsRepository.ts      # Acceso a datos de reportes
 │   ├── MicroservicePresaleRepository.ts
-│   └── SupabaseImageRepository.ts # Supabase Storage operations
+│   └── SupabaseImageRepository.ts # Operaciones de Supabase Storage
 ├── routes/
-│   └── v2/                      # API v2 routes
+│   └── v2/                       # Rutas de la API v2
 │       ├── products.ts
 │       ├── categories.ts
 │       ├── images.ts
 │       ├── stock.ts
 │       └── reports.ts
 ├── services/
-│   ├── ProductService.ts        # Product business logic
-│   ├── ProductImageService.ts   # Product image business logic
-│   ├── CategoriaService.ts      # Category business logic
-│   ├── StockService.ts          # Stock business logic
-│   ├── ReportsService.ts        # Reports business logic
-│   ├── ImageService.ts          # Image business logic
+│   ├── ProductService.ts         # Lógica de negocio de productos
+│   ├── ProductImageService.ts    # Lógica de negocio de imágenes
+│   ├── categoriaService.ts       # Lógica de negocio de categorías
+│   ├── stockService.ts           # Lógica de negocio de stock
+│   ├── ReportsService.ts         # Lógica de negocio de reportes
+│   ├── ImageService.ts           # Lógica de negocio de imágenes
 │   ├── optimizedProductService.ts
 │   ├── productStrategies.ts
 │   └── MicroservicePresaleService.ts
-├── dist/                        # Compiled JavaScript output
+├── dist/                         # JavaScript compilado
 ├── docs/
-│   └── API_DOCUMENTATION.md     # Detailed API documentation
-├── app.ts                       # Express app configuration
-├── swagger.yaml                 # OpenAPI 3.0 specification
-├── swagger-v2.yaml              # Alternative OpenAPI spec
-├── vercel.json                  # Vercel deployment config
-├── tsconfig.json                # TypeScript configuration
+│   └── API_DOCUMENTATION.md      # Documentación detallada de la API
+├── app.ts                        # Configuración de la app Express
+├── swagger.yaml                  # Especificación OpenAPI 3.0
+├── swagger-v2.yaml               # Especificación OpenAPI alternativa
+├── vercel.json                   # Configuración de despliegue en Vercel
+├── tsconfig.json                 # Configuración de TypeScript
 ├── package.json
-├── .env.example                 # Environment variables template
+├── .env.example                  # Plantilla de variables de entorno
 └── README.md
 ```
 
 ---
 
-## Prerequisites
+## Requisitos previos
 
-- **Node.js** 20 or higher
-- **npm** or **yarn**
-- **Supabase Account** (for PostgreSQL database and Storage)
-- **Git**
-- **Vercel CLI** (optional, for deployment)
+- **Node.js** 20 o superior.
+- **npm** o **yarn**.
+- **Cuenta de Supabase** (para la base de datos PostgreSQL y el Storage).
+- **Git**.
+- **Vercel CLI** (opcional, para despliegue).
 
 ---
 
-## Environment Variables
+## Variables de entorno
 
-Copy `.env.example` to `.env` and fill in your values:
+Copia `.env.example` a `.env` y completa tus valores:
 
 ```env
-# Server Configuration
+# Configuración del servidor
 PORT=10102
 NODE_ENV=development
 
-# Supabase Configuration (Required)
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-SUPABASE_STORAGE_BUCKET=your_storage_bucket_name
+# Configuración de Supabase (Requerido)
+SUPABASE_URL=tu_supabase_project_url
+SUPABASE_ANON_KEY=tu_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=tu_supabase_service_role_key
+SUPABASE_STORAGE_BUCKET=tu_storage_bucket_name
 
-# Supabase PostgreSQL Connection (Alternative to individual params)
-DATABASE_URL=postgresql://user:password@host:port/database
+# Conexión PostgreSQL de Supabase (alternativa a los parámetros individuales)
+DATABASE_URL=postgresql://usuario:password@host:puerto/base_de_datos
 
-# Or individual PostgreSQL parameters:
-DB_HOST=your_db_host
+# O parámetros PostgreSQL individuales:
+DB_HOST=tu_db_host
 DB_PORT=5432
-DB_DATABASE=your_db_name
-DB_USERNAME=your_db_user
-DB_PASSWORD=your_db_password
+DB_DATABASE=tu_db_name
+DB_USERNAME=tu_db_user
+DB_PASSWORD=tu_db_password
 DB_SSL=true
-
-# JWT Configuration (Optional - currently using Supabase Auth)
-# JWT_SECRET=your_jwt_secret
-# JWT_EXPIRES_IN=7d
 ```
 
-### Required Variables
+### Variables requeridas
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `SUPABASE_URL` | Supabase project URL | ✅ Yes |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key for admin operations | ✅ Yes |
-| `SUPABASE_STORAGE_BUCKET` | Storage bucket name for images | ✅ Yes |
-| `PORT` | Server port (default: 10102) | ❌ No |
-| `NODE_ENV` | Environment (development/production) | ❌ No |
+| Variable | Descripción | Requerida |
+|----------|-------------|-----------|
+| `SUPABASE_URL` | URL del proyecto Supabase | Sí |
+| `SUPABASE_SERVICE_ROLE_KEY` | Clave de rol de servicio para operaciones admin | Sí |
+| `SUPABASE_STORAGE_BUCKET` | Nombre del bucket de Storage para imágenes | Sí |
+| `PORT` | Puerto del servidor (por defecto: 10102) | No |
+| `NODE_ENV` | Entorno (`development`/`production`) | No |
+
+> [!WARNING]
+> Nunca subas tu archivo `.env` al repositorio. Añade todas las variables sensibles como variables de entorno en Vercel antes de desplegar a producción.
 
 ---
 
-## Installation & Setup
+## Instalación y configuración
 
-### 1. Clone the Repository
+### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/JhoamSebastianMunoz/microservice_backend_products_v2.git
-cd microservice_backend_products
+git clone https://github.com/JhoamSebastianMunoz/tatsoft-products-service-v2.git
+cd tatsoft-products-service-v2
 ```
 
-### 2. Install Dependencies
+### 2. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-### 3. Configure Environment Variables
+### 3. Configurar variables de entorno
 
 ```bash
 cp .env.example .env
-# Edit .env with your Supabase credentials
+# Edita .env con tus credenciales de Supabase
 ```
 
-### 4. Set Up Supabase Database
+### 4. Configurar la base de datos en Supabase
 
-Run the SQL schema in your Supabase SQL Editor:
+Ejecuta el esquema SQL en el SQL Editor de tu proyecto Supabase:
 
 ```bash
-# The schema is in microservice_product.sql
-# Execute it in Supabase Dashboard → SQL Editor
+# El esquema está en microservice_product.sql
+# Ejecútalo en Supabase Dashboard → SQL Editor
 ```
 
-### 5. Compile TypeScript
+### 5. Compilar TypeScript
 
 ```bash
 npm run build
 ```
 
-### 6. Start Development Server
+### 6. Iniciar el servidor de desarrollo
 
 ```bash
 npm run dev
 ```
 
-Server will be available at: `http://localhost:10102`
+El servidor estará disponible en: `http://localhost:10102`
 
 ---
 
-## Available Scripts
+## Scripts disponibles
 
-| Command | Description |
+| Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Start development server with hot reload (ts-node-dev) |
-| `npm run build` | Compile TypeScript to JavaScript (`dist/`) |
-| `npm start` | Run production server from compiled `dist/` |
-| `npm test` | Run all tests with Jest |
-| `npm run test:unit` | Run unit tests only |
-| `npm run test:integration` | Run integration tests only |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run lint` | Run ESLint on source files |
-| `npm run lint:fix` | Run ESLint with auto-fix |
+| `npm run dev` | Servidor de desarrollo con recarga en caliente (ts-node-dev) |
+| `npm run build` | Compila TypeScript a JavaScript (`dist/`) |
+| `npm start` | Ejecuta el servidor de producción desde `dist/` |
+| `npm test` | Ejecuta todas las pruebas con Jest |
+| `npm run test:unit` | Ejecuta solo las pruebas unitarias |
+| `npm run test:integration` | Ejecuta solo las pruebas de integración |
+| `npm run test:watch` | Ejecuta las pruebas en modo watch |
+| `npm run test:coverage` | Ejecuta las pruebas con reporte de cobertura |
+| `npm run lint` | Ejecuta ESLint sobre los archivos fuente |
+| `npm run lint:fix` | Ejecuta ESLint con corrección automática |
 
 ---
 
-## API Documentation
+## Documentación de la API
 
-### Interactive Documentation (Scalar)
+### Documentación interactiva (Scalar)
 
-Access the beautiful, interactive API documentation at:
+Accede a la documentación interactiva en:
 
 - **Local**: `http://localhost:10102/api-docs`
-- **Production**: `https://microservice-backend-products-v2.vercel.app/api-docs`
+- **Producción**: `https://microservice-backend-products-v2.vercel.app/api-docs`
 
-### OpenAPI Specification
+### Especificación OpenAPI
 
 - **YAML**: `GET /swagger.yaml`
 - **JSON**: `GET /api-docs-json`
 
+> [!TIP]
+> Puedes consumir el JSON de OpenAPI (`/api-docs-json`) desde Postman, Insomnia o cualquier cliente que importe especificaciones OpenAPI 3.0.
+
 ---
 
-## API Endpoints (v2)
+## Endpoints de la API (v2)
 
-All endpoints are prefixed with `/api/v2`.
+Todos los endpoints tienen el prefijo `/api/v2`.
 
-### Public Endpoints (No Authentication)
+### Endpoints públicos (sin autenticación)
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `GET` | `/products` | List products with pagination, filters, sorting |
-| `GET` | `/products/:id` | Get single product with images |
-| `GET` | `/categories` | List all categories |
-| `GET` | `/categories/:id` | Get single category |
-| `GET` | `/images/:id` | Get image information |
-| `GET` | `/stock/:productId` | Get stock for a product |
-| `GET` | `/stock/history` | Get stock movement history |
+| `GET` | `/products` | Lista de productos con paginación, filtros y ordenamiento |
+| `GET` | `/products/:id` | Obtiene un producto con sus imágenes |
+| `GET` | `/categories` | Lista todas las categorías |
+| `GET` | `/categories/:id` | Obtiene una categoría |
+| `GET` | `/images/:id` | Obtiene información de una imagen |
+| `GET` | `/stock/:productId` | Obtiene el stock de un producto |
+| `GET` | `/stock/history` | Historial de movimientos de stock |
 
-### Protected Endpoints (Require ADMINISTRADOR Role)
+### Endpoints protegidos (requieren rol `ADMINISTRADOR`)
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| `POST` | `/products` | Create product (multipart/form-data with images) |
-| `PUT` | `/products/:id` | Update product (multipart/form-data) |
-| `DELETE` | `/products/:id` | Delete product |
-| `POST` | `/categories` | Create category |
-| `PUT` | `/categories/:id` | Update category |
-| `DELETE` | `/categories/:id` | Delete category |
-| `POST` | `/images/upload` | Upload image to Supabase Storage |
-| `DELETE` | `/images/:id` | Delete image |
-| `POST` | `/stock/:productId` | Register stock entry (auto-calculates price) |
-| `GET` | `/reports/low-stock` | Get low stock report (threshold query param) |
+| `POST` | `/products` | Crea un producto (multipart/form-data con imágenes) |
+| `PUT` | `/products/:id` | Actualiza un producto (multipart/form-data) |
+| `DELETE` | `/products/:id` | Elimina un producto |
+| `POST` | `/categories` | Crea una categoría |
+| `PUT` | `/categories/:id` | Actualiza una categoría |
+| `DELETE` | `/categories/:id` | Elimina una categoría |
+| `POST` | `/images/upload` | Sube una imagen a Supabase Storage |
+| `DELETE` | `/images/:id` | Elimina una imagen |
+| `POST` | `/stock/:productId` | Registra ingreso de stock (calcula el precio automáticamente) |
+| `GET` | `/reports/low-stock` | Reporte de stock bajo (umbral por query param) |
 
-### Query Parameters (Products)
+### Parámetros de consulta (Productos)
 
 ```
 GET /api/v2/products?page=1&limit=20&id_categoria=1&precio_min=10&precio_max=100&nombre=laptop&sort=precio&order=DESC
 ```
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `page` | number | 1 | Page number |
-| `limit` | number | 20 (max 100) | Results per page |
-| `id_categoria` | number | - | Filter by category ID |
-| `precio_min` | number | - | Minimum price |
-| `precio_max` | number | - | Maximum price |
-| `nombre` | string | - | Partial name search |
-| `sort` | string | nombre_producto | Sort field |
-| `order` | string | ASC | ASC or DESC |
+| Parámetro | Tipo | Por defecto | Descripción |
+|-----------|------|-------------|-------------|
+| `page` | number | 1 | Número de página |
+| `limit` | number | 20 (máx 100) | Resultados por página |
+| `id_categoria` | number | - | Filtra por ID de categoría |
+| `precio_min` | number | - | Precio mínimo |
+| `precio_max` | number | - | Precio máximo |
+| `nombre` | string | - | Búsqueda parcial por nombre |
+| `sort` | string | nombre_producto | Campo de ordenamiento |
+| `order` | string | ASC | `ASC` o `DESC` |
 
 ---
 
-## Authentication & Authorization
+## Autenticación y autorización
 
-### JWT Bearer Token
+### Token JWT
 
-Include the token in the Authorization header:
+Incluye el token en la cabecera `Authorization`:
 
 ```
-Authorization: Bearer <your_jwt_token>
+Authorization: Bearer <tu_token_jwt>
 ```
 
-### Role-Based Access
+### Acceso basado en roles
 
-- **Public**: All `GET` endpoints (read-only)
-- **ADMINISTRADOR**: Required for all `POST`, `PUT`, `DELETE` operations
+- **Público**: todos los endpoints `GET` (solo lectura).
+- **ADMINISTRADOR**: requerido para todas las operaciones `POST`, `PUT` y `DELETE`.
 
-The middleware chain:
-1. `verifyToken` - Validates JWT signature and expiration
-2. `checkRoleAndPermission(["ADMINISTRADOR"])` - Verifies admin role
+La cadena de middleware:
+
+1. `verifyToken` – valida la firma y expiración del JWT.
+2. `checkRoleAndPermission(["ADMINISTRADOR"])` – verifica el rol de administrador.
 
 ---
 
-## Database & Storage
+## Base de datos y almacenamiento
 
 ### Supabase PostgreSQL
 
-- **Tables**: `productos`, `categorias`, `producto_imagenes`, `stock`, `ingresos_stock`
-- **Relationships**: Foreign keys with cascade deletes
-- **Client**: Official `@supabase/supabase-js` v2
+- **Tablas**: `productos`, `categorias`, `producto_imagenes`, `stock`, `ingresos_stock`.
+- **Relaciones**: claves foráneas con borrado en cascada.
+- **Cliente**: `@supabase/supabase-js` v2.
 
 ### Supabase Storage
 
-- **Bucket**: Configured via `SUPABASE_STORAGE_BUCKET`
-- **Structure**: `productos/{product_id}/{filename}`
-- **Features**: Public URLs, automatic cleanup on product/image deletion
+- **Bucket**: se configura mediante `SUPABASE_STORAGE_BUCKET`.
+- **Estructura**: `productos/{product_id}/{filename}`.
+- **Características**: URLs públicas y limpieza automática al eliminar productos o imágenes.
 
-### Key Repositories
+### Repositorios clave
 
-- `ProductRepository` - Product CRUD with category joins
-- `CategoriaRepository` - Category management
-- `ProductImageRepository` - Image metadata management
-- `StockRepository` - Stock entries and history
-- `ReportsRepository` - Low stock reports
-- `SupabaseImageRepository` - Direct Storage operations
+- `ProductRepository` – CRUD de productos con joins de categoría.
+- `CategoriaRepository` – gestión de categorías.
+- `ProductImageRepository` – gestión de metadatos de imágenes.
+- `StockRepository` – ingresos de stock e historial.
+- `ReportsRepository` – reportes de stock bajo.
+- `SupabaseImageRepository` – operaciones directas sobre Storage.
 
 ---
 
-## Caching & Rate Limiting
+## Caché y rate limiting
 
-### Response Caching
+### Caché de respuestas
 
-- **TTL**: 5 minutes (configurable)
-- **Scope**: All `GET` endpoints
-- **Headers**: `X-Cache: HIT|MISS` indicates cache status
-- **Invalidation**: Automatic on write operations (POST, PUT, DELETE)
+- **TTL**: 5 minutos (configurable).
+- **Alcance**: todos los endpoints `GET`.
+- **Cabeceras**: `X-Cache: HIT|MISS` indica el estado de la caché.
+- **Invalidación**: automática en operaciones de escritura (`POST`, `PUT`, `DELETE`).
 
-### Rate Limiting
+### Rate limiting
 
-- **Limit**: 100 requests per minute per user
-- **Headers**: 
+- **Límite**: 100 peticiones por minuto por usuario.
+- **Cabeceras**:
   - `X-RateLimit-Limit`
   - `X-RateLimit-Remaining`
   - `X-RateLimit-Reset`
 
 ---
 
-## Error Handling
+## Manejo de errores
 
-### Standardized Error Response
+### Respuesta de error estandarizada
 
 ```json
 {
   "success": false,
-  "message": "Error description",
-  "error": "ERROR_CODE",
-  "details": "Additional context (development only)"
+  "message": "Descripción del error",
+  "error": "CODIGO_DE_ERROR",
+  "details": "Contexto adicional (solo en desarrollo)"
 }
 ```
 
-### Validation Error (422)
+### Error de validación (422)
 
 ```json
 {
   "success": false,
-  "message": "Validation error",
+  "message": "Error de validación",
   "errors": [
     {
       "field": "nombre_producto",
-      "message": "Product name must be 2-120 characters",
+      "message": "El nombre del producto debe tener entre 2 y 120 caracteres",
       "value": "A"
     }
   ]
 }
 ```
 
-### Common HTTP Status Codes
+### Códigos HTTP comunes
 
-| Code | Description |
-|------|-------------|
-| 200 | Success |
-| 201 | Created |
-| 400 | Bad Request / Validation Error |
-| 401 | Unauthorized (invalid/missing token) |
-| 403 | Forbidden (insufficient permissions) |
-| 404 | Not Found |
-| 409 | Conflict (duplicate/constraint violation) |
-| 422 | Unprocessable Entity (validation failed) |
-| 500 | Internal Server Error |
+| Código | Descripción |
+|--------|-------------|
+| 200 | Éxito |
+| 201 | Creado |
+| 400 | Petición incorrecta / Error de validación |
+| 401 | No autorizado (token inválido o ausente) |
+| 403 | Prohibido (permisos insuficientes) |
+| 404 | No encontrado |
+| 409 | Conflicto (duplicado / violación de restricción) |
+| 422 | Entidad no procesable (validación fallida) |
+| 500 | Error interno del servidor |
 
-### Supabase Error Codes
+### Códigos de error de Supabase
 
-| Code | Description | HTTP Status |
-|------|-------------|-------------|
-| `PGRST116` | Resource not found | 404 |
-| `23505` | Unique constraint violation | 409 |
-| `23503` | Foreign key violation | 400 |
-| `22P02` | Invalid data type | 400 |
+| Código | Descripción | Estado HTTP |
+|--------|-------------|-------------|
+| `PGRST116` | Recurso no encontrado | 404 |
+| `23505` | Violación de restricción única | 409 |
+| `23503` | Violación de clave foránea | 400 |
+| `22P02` | Tipo de dato inválido | 400 |
 
 ---
 
-## Deployment
+## Despliegue
 
-### Vercel Serverless (Recommended)
+### Vercel Serverless (recomendado)
 
-The project is configured for zero-config deployment on Vercel.
+El proyecto está configurado para un despliegue sin configuración en Vercel.
 
-#### Prerequisites
+#### Requisitos
 
-- Vercel account
-- Vercel CLI installed (`npm i -g vercel`)
+- Cuenta de Vercel.
+- Vercel CLI instalado (`npm i -g vercel`).
 
-#### Deploy Steps
+#### Pasos de despliegue
 
 ```bash
-# 1. Login to Vercel
+# 1. Iniciar sesión en Vercel
 vercel login
 
-# 2. Deploy (preview)
+# 2. Desplegar (preview)
 vercel
 
-# 3. Configure Environment Variables in Vercel Dashboard
-# Settings → Environment Variables → Add all from .env
+# 3. Configurar variables de entorno en el panel de Vercel
+# Settings → Environment Variables → Añade todas las de .env
 
-# 4. Deploy to Production
+# 4. Desplegar a producción
 vercel --prod
 ```
 
-#### Required Vercel Environment Variables
+#### Variables de entorno requeridas en Vercel
 
-| Variable | Environment |
-|----------|-------------|
+| Variable | Entorno |
+|----------|---------|
 | `SUPABASE_URL` | Production |
 | `SUPABASE_SERVICE_ROLE_KEY` | Production |
 | `SUPABASE_STORAGE_BUCKET` | Production |
-| `NODE_ENV` | Production (value: `production`) |
-| `DATABASE_URL` | Production (optional, alternative to individual params) |
+| `NODE_ENV` | Production (valor: `production`) |
+| `DATABASE_URL` | Production (opcional, alternativa a los parámetros individuales) |
 
-#### Post-Deploy: Update CORS
+#### Post-deploy: actualizar CORS
 
-After first deploy, add your Vercel URL to `allowedOrigins` in `app.ts`:
+Tras el primer despliegue, añade tu URL de Vercel a `allowedOrigins` en `app.ts`:
 
 ```typescript
 const allowedOrigins = [
   'http://localhost:10102',
   'http://localhost:5173',
-  'https://your-project.vercel.app'  // Add this
+  'https://tu-proyecto.vercel.app'  // Añadir esta
 ];
 ```
 
-Then redeploy: `vercel --prod`
+Después vuelve a desplegar: `vercel --prod`
 
-### Traditional Server
+### Servidor tradicional
 
 ```bash
 npm run build
 npm start
 ```
 
+> [!NOTE]
+> Existe una guía de despliegue ampliada en [`DEPLOY.md`](DEPLOY.md).
+
 ---
 
-## Testing
+## Pruebas
 
-### Test Structure
+### Estructura de pruebas
 
 ```
 tests/
-├── unit/           # Unit tests (services, repositories)
-├── integration/    # Integration tests (API endpoints)
-└── setup.ts        # Test configuration
+├── unit/           # Pruebas unitarias (servicios, repositorios)
+├── integration/    # Pruebas de integración (endpoints de la API)
+└── setup.ts        # Configuración de las pruebas
 ```
 
-### Run Tests
+### Ejecutar pruebas
 
 ```bash
-# All tests
+# Todas las pruebas
 npm test
 
-# Unit tests only
+# Solo pruebas unitarias
 npm run test:unit
 
-# Integration tests only
+# Solo pruebas de integración
 npm run test:integration
 
-# Watch mode
+# Modo watch
 npm run test:watch
 
-# With coverage
+# Con cobertura
 npm run test:coverage
 ```
 
-### Test Configuration
+### Configuración de pruebas
 
-- **Framework**: Jest 29 with `ts-jest` preset
-- **Environment**: Node.js
-- **Coverage**: Text, LCOV, HTML reports
-- **Test Match**: `**/*.test.ts` in `tests/` directory
+- **Framework**: Jest 29 con preset `ts-jest`.
+- **Entorno**: Node.js.
+- **Cobertura**: reportes text, LCOV y HTML.
+- **Test Match**: archivos `**/*.test.ts` dentro de `tests/`.
 
 ---
 
-## Code Quality
+## Calidad de código
 
 ### Linting
 
 ```bash
-# Check for issues
+# Comprobar problemas
 npm run lint
 
-# Auto-fix issues
+# Corregir problemas automáticamente
 npm run lint:fix
 ```
 
 ### TypeScript
 
-- **Target**: ES6
-- **Module**: CommonJS
-- **Strict Mode**: Enabled
-- **Config**: `tsconfig.json` at root
-
-### Pre-commit (Optional)
-
-Consider adding Husky for pre-commit hooks:
-
-```bash
-npm install --save-dev husky lint-staged
-npx husky install
-npx husky add .husky/pre-commit "npx lint-staged"
-```
+- **Target**: ES6.
+- **Module**: CommonJS.
+- **Modo estricto**: activado.
+- **Configuración**: `tsconfig.json` en la raíz.
 
 ---
 
-## Contributing
+## Contacto
 
-We welcome contributions! Please follow these steps:
-
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/your-feature-name`
-3. **Commit** your changes: `git commit -m 'Add: your feature description'`
-4. **Push** to the branch: `git push origin feature/your-feature-name`
-5. **Open** a Pull Request
-
-### Guidelines
-
-- Follow existing code style (ESLint + Prettier)
-- Write tests for new features
-- Update documentation for API changes
-- Keep commits atomic and descriptive
-- Ensure all tests pass before submitting PR
-
----
-
-## License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Contact
-
-- **Author**: Development Team
-- **GitHub**: [https://github.com/JhoamSebastianMunoz/microservice_backend_products_v2.git](https://github.com/JhoamSebastianMunoz/microservice_backend_products_v2.git)
+- **Autor**: Development Team
+- **GitHub**: [JhoamSebastianMunoz/tatsoft-products-service-v2](https://github.com/JhoamSebastianMunoz/tatsoft-products-service-v2)
 - **Email**: jhoamsebastian68@gmail.com
-- **API Docs**: [Production Scalar Docs](https://microservice-backend-products-v2.vercel.app/api-docs)
+- **API Docs**: [Documentación Scalar en producción](https://microservice-backend-products-v2.vercel.app/api-docs)
 
 ---
 
-**Built with ❤️ using Express, TypeScript, Supabase, and Vercel**
+**Construido con Express, TypeScript, Supabase y Vercel.**
