@@ -3,6 +3,7 @@ node_modules
 generate_key
 REFACTOR_DOCUMENTATION.md
 API_V2_DOCUMENTATION.md
+/dist
 
 .env
 .env.*
